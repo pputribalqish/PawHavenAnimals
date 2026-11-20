@@ -1,0 +1,689 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | Paw Haven</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- ApexCharts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="./style.css">
+
+    <style>
+        /* Malaysia chart */
+        .ph-malaysia-panel {
+            width: 100%;
+            margin-top: 25px;
+            padding: 26px;
+        }
+
+        .ph-malaysia-panel #malaysiaAdoptionChart {
+            width: 100%;
+            min-height: 350px;
+        }
+
+        .ph-chart-source {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee9e1;
+            color: #8b9188;
+            font-size: 12px;
+        }
+
+        .ph-chart-source a {
+            color: #71836b;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .ph-chart-source a:hover {
+            text-decoration: underline;
+        }
+
+        .ph-chart-panel {
+            min-width: 0;
+        }
+
+        @media (max-width: 768px) {
+            .ph-malaysia-panel {
+                padding: 18px;
+            }
+
+            .ph-malaysia-panel #malaysiaAdoptionChart {
+                min-height: 280px;
+            }
+        }
+    </style>
+
+</head>
+
+<body class="app-page">
+
+<div class="ph-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="ph-sidebar" id="sidebar">
+
+        <div class="ph-brand">
+            <div class="ph-brand-icon">
+                <i class="fa-solid fa-paw"></i>
+            </div>
+
+            <div>
+                <h2>Paw Haven</h2>
+                <span>ANIMAL SHELTER MANAGEMENT</span>
+            </div>
+        </div>
+
+        <!-- ADMIN PROFILE -->
+        <div class="ph-profile">
+            <div class="ph-avatar" id="adminAvatar">A</div>
+
+            <div>
+                <strong id="adminName">Administrator</strong>
+                <small>Admin account</small>
+            </div>
+        </div>
+
+        <p class="ph-nav-label">MAIN MENU</p>
+
+        <!-- NAVIGATION -->
+        <nav class="ph-navigation">
+
+            <a href="dashboard.html" class="active">
+                <span class="ph-nav-icon">⌂</span>
+                Dashboard
+            </a>
+
+            <a href="animals.html">
+                <span class="ph-nav-icon">🐾</span>
+                Animals
+            </a>
+
+            <a href="applications.html">
+                <span class="ph-nav-icon">▤</span>
+                Applications
+            </a>
+
+            <a href="about.html">
+                <span class="ph-nav-icon">♡</span>
+                About Us
+            </a>
+
+        </nav>
+
+        <!-- SIDEBAR BOTTOM -->
+        <div class="ph-sidebar-bottom">
+
+            <div class="ph-sidebar-note">
+                <span>♡</span>
+                <p>Every paw deserves a loving home.</p>
+            </div>
+
+            <a href="#" id="logoutLink" class="ph-logout">
+                <span>⇥</span> Log Out
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="ph-main">
+
+        <!-- TOPBAR -->
+        <header class="ph-topbar">
+
+            <button class="ph-menu-btn" id="mobileMenuBtn">
+                ☰
+            </button>
+
+            <div>
+                <span class="ph-topbar-label">
+                    PAW HAVEN / OVERVIEW
+                </span>
+
+                <h2>Dashboard</h2>
+            </div>
+
+            <div class="ph-topbar-user">
+
+                <div class="ph-topbar-admin">
+                    <span>Welcome back,</span>
+                    <strong id="adminTopbarName">Paw Haven Admin</strong>
+                </div>
+
+                <div class="ph-topbar-avatar">🐾</div>
+
+            </div>
+
+        </header>
+
+
+        <!-- DASHBOARD CONTENT -->
+        <div class="ph-content">
+
+
+            <!-- WELCOME SECTION -->
+            <section class="ph-welcome">
+
+                <div class="ph-welcome-copy">
+
+                    <span class="ph-eyebrow">
+                        <span></span> SHELTER OVERVIEW
+                    </span>
+
+                    <h1>
+                        A little care goes a
+                        <em>long way.</em>
+                    </h1>
+
+                    <p>
+                        Welcome back! Here's what's happening at Paw Haven.
+                        Keep track of your animals, adoption applications
+                        and shelter activities all in one place.
+                    </p>
+
+                    <a href="animals.html" class="ph-primary-btn">
+                        Explore Animals <span>→</span>
+                    </a>
+
+                </div>
+
+
+                <div class="ph-welcome-image">
+
+                    <img
+                        src="https://cdn.pixabay.com/photo/2020/03/31/19/20/dog-4988985_1280.jpg"
+                        alt="Animal at Paw Haven"
+                    >
+
+                    <div class="ph-image-note">
+
+                        <span>♡</span>
+
+                        <div>
+                            <strong>Love starts here</strong>
+                            <small>Give every animal a chance</small>
+                        </div>
+
+                    </div>
+
+                    <div class="ph-image-sticker">
+                        MADE WITH<br>LOVE
+                        <span>♡</span>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- SHELTER STATISTICS -->
+            <section class="ph-section">
+
+                <div class="ph-section-heading">
+
+                    <div>
+                        <span class="ph-eyebrow">AT A GLANCE</span>
+                        <h2>Shelter Overview</h2>
+                    </div>
+
+                    <span class="ph-updated">
+                        Your shelter statistics
+                    </span>
+
+                </div>
+
+
+                <div class="ph-stats-grid">
+
+                    <!-- TOTAL ANIMALS -->
+                    <div class="ph-stat-card">
+
+                        <div class="ph-stat-top">
+                            <span class="ph-stat-icon sage-icon">🐾</span>
+                            <span class="ph-stat-caption">ANIMAL RECORDS</span>
+                        </div>
+
+                        <strong id="totalAnimals">0</strong>
+                        <p>Total animals registered</p>
+
+                    </div>
+
+
+                    <!-- AVAILABLE -->
+                    <div class="ph-stat-card">
+
+                        <div class="ph-stat-top">
+                            <span class="ph-stat-icon peach-icon">♡</span>
+                            <span class="ph-stat-caption">AVAILABLE</span>
+                        </div>
+
+                        <strong id="availableAnimals">0</strong>
+                        <p>Looking for a forever home</p>
+
+                    </div>
+
+
+                    <!-- ADOPTED -->
+                    <div class="ph-stat-card">
+
+                        <div class="ph-stat-top">
+                            <span class="ph-stat-icon lilac-icon">✿</span>
+                            <span class="ph-stat-caption">ADOPTED</span>
+                        </div>
+
+                        <strong id="adoptedAnimals">0</strong>
+                        <p>Successfully adopted</p>
+
+                    </div>
+
+
+                    <!-- PENDING -->
+                    <div class="ph-stat-card">
+
+                        <div class="ph-stat-top">
+                            <span class="ph-stat-icon yellow-icon">▤</span>
+                            <span class="ph-stat-caption">PENDING</span>
+                        </div>
+
+                        <strong id="pendingApplications">0</strong>
+                        <p>Applications awaiting review</p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- SHELTER ANALYTICS -->
+            <section class="ph-section">
+
+                <div class="ph-section-heading">
+
+                    <div>
+                        <span class="ph-eyebrow">SHELTER ANALYTICS</span>
+                        <h2>Understanding the numbers</h2>
+                    </div>
+
+                </div>
+
+
+                <!-- ORIGINAL TWO CHARTS -->
+                <div class="ph-chart-grid">
+
+
+                    <!-- APPROVED ADOPTIONS -->
+                    <div class="ph-panel ph-chart-panel">
+
+                        <div class="ph-panel-heading">
+
+                            <div>
+                                <h3>Approved Adoptions</h3>
+                                <p>Monthly adoption activity</p>
+                            </div>
+
+                            <span class="ph-panel-icon">↗</span>
+
+                        </div>
+
+                        <div id="adoptionChart"></div>
+
+                    </div>
+
+
+                    <!-- ANIMALS BY SPECIES -->
+                    <div class="ph-panel ph-chart-panel">
+
+                        <div class="ph-panel-heading">
+
+                            <div>
+                                <h3>Animals by Species</h3>
+                                <p>Distribution of registered animals</p>
+                            </div>
+
+                            <span class="ph-panel-icon">🐾</span>
+
+                        </div>
+
+                        <div id="statusChart"></div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- MALAYSIA ADOPTION STATISTICS -->
+                <div class="ph-panel ph-chart-panel ph-malaysia-panel">
+
+                    <div class="ph-panel-heading">
+
+                        <div>
+                            <h3>Animal Adoption Trends in Malaysia</h3>
+
+                            <p>
+                                Annual adoption figures reported by
+                                SPCA Selangor
+                            </p>
+                        </div>
+
+                        <span class="ph-panel-icon">🇲🇾</span>
+
+                    </div>
+
+
+                    <!-- BAR CHART -->
+                    <div id="malaysiaAdoptionChart"></div>
+
+
+                    <!-- SOURCES -->
+                    <div class="ph-chart-source">
+
+                        Data sources:
+
+                        <a
+                            href="https://www.spca.org.my/wp-content/uploads/2024/01/SPCA-Annual-Review-2023.pdf"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            2023 Annual Review
+                        </a>
+
+                        |
+
+                        <a
+                            href="https://www.spca.org.my/wp-content/uploads/2025/04/SPCA_AR2024c.pdf"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            2024 Annual Review
+                        </a>
+
+                        |
+
+                        <a
+                            href="https://www.sinardaily.my/article/737775/focus/sports/spca-selangor-launches-world-cup-campaign-to-boost-adoptions"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            2025 Report
+                        </a>
+
+                        <p style="margin-top: 8px; margin-bottom: 0;">
+                            Note: Figures represent SPCA Selangor's
+                            reported adoptions, not nationwide totals.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- RECENT ANIMALS -->
+            <section class="ph-section">
+
+                <div class="ph-section-heading">
+
+                    <div>
+                        <span class="ph-eyebrow">RECENT RECORDS</span>
+                        <h2>Meet our little friends</h2>
+                    </div>
+
+                    <a href="animals.html" class="ph-text-link">
+                        View all animals →
+                    </a>
+
+                </div>
+
+
+                <div class="ph-panel ph-table-panel">
+
+                    <div class="ph-panel-heading">
+
+                        <div>
+                            <h3>Recently added animals</h3>
+                            <p>
+                                A quick look at the latest shelter records.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="table-responsive">
+
+                        <table class="table ph-table align-middle">
+
+                            <thead>
+                                <tr>
+                                    <th>Animal Name</th>
+                                    <th>Species</th>
+                                    <th>Breed</th>
+                                    <th>Age</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="recentAnimalsTable">
+
+                                <tr>
+                                    <td colspan="5">
+                                        Loading animal records...
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- BOTTOM MESSAGE -->
+            <section class="ph-bottom-banner">
+
+                <div>
+
+                    <span class="ph-eyebrow">
+                        A HOME FOR EVERY PAW
+                    </span>
+
+                    <h2>
+                        Behind every record is a life waiting for love.
+                    </h2>
+
+                    <p>
+                        Thank you for making animal care and responsible
+                        adoption part of our everyday work.
+                    </p>
+
+                </div>
+
+                <span class="ph-banner-heart">♡</span>
+
+            </section>
+
+        </div>
+
+
+        <!-- FOOTER -->
+        <footer class="ph-footer">
+
+            <span>
+                © <span id="currentYear"></span> Paw Haven.
+                All rights reserved.
+            </span>
+
+            <span>Made with ♡ for every animal.</span>
+
+        </footer>
+
+    </main>
+
+</div>
+
+
+<!-- MAIN JAVASCRIPT -->
+<script src="js/script.js"></script>
+
+
+<!-- MALAYSIA ADOPTION BAR CHART -->
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const chartElement = document.getElementById(
+        "malaysiaAdoptionChart"
+    );
+
+    if (!chartElement || typeof ApexCharts === "undefined") {
+        console.error("Malaysia adoption chart could not load.");
+        return;
+    }
+
+    const malaysiaOptions = {
+
+        series: [{
+            name: "Animals Adopted",
+            data: [235, 187, 153]
+        }],
+
+        chart: {
+            type: "bar",
+            height: 350,
+            toolbar: {
+                show: false
+            },
+            fontFamily: "DM Sans, sans-serif",
+            animations: {
+                enabled: true,
+                speed: 800
+            }
+        },
+
+        colors: ["#71836b"],
+
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                columnWidth: "38%",
+                borderRadius: 7,
+                borderRadiusApplication: "end"
+            }
+        },
+
+        dataLabels: {
+            enabled: true,
+            offsetY: -20,
+            style: {
+                fontSize: "13px",
+                fontWeight: 600,
+                colors: ["#71836b"]
+            }
+        },
+
+        xaxis: {
+            categories: ["2023", "2024", "2025"],
+            labels: {
+                style: {
+                    colors: "#68766a",
+                    fontSize: "12px"
+                }
+            }
+        },
+
+        yaxis: {
+            min: 0,
+            max: 250,
+            tickAmount: 5,
+            title: {
+                text: "Number of Animals Adopted",
+                style: {
+                    color: "#68766a",
+                    fontWeight: 500
+                }
+            },
+            labels: {
+                style: {
+                    colors: "#68766a"
+                }
+            }
+        },
+
+        grid: {
+            borderColor: "#eee9e1",
+            strokeDashArray: 4
+        },
+
+        legend: {
+            show: false
+        },
+
+        tooltip: {
+            y: {
+                formatter: function (value) {
+                    return value + " animals adopted";
+                }
+            }
+        },
+
+        responsive: [{
+            breakpoint: 768,
+            options: {
+                chart: {
+                    height: 300
+                },
+                plotOptions: {
+                    bar: {
+                        columnWidth: "50%"
+                    }
+                }
+            }
+        }]
+
+    };
+
+    const malaysiaChart = new ApexCharts(
+        chartElement,
+        malaysiaOptions
+    );
+
+    malaysiaChart.render();
+
+});
+
+
+// Automatically display current year
+const yearElement = document.getElementById("currentYear");
+
+if (yearElement) {
+    yearElement.textContent = new Date().getFullYear();
+}
+
+</script>
+
+</body>
+</html>

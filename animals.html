@@ -1,0 +1,1345 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Animal Management | Paw Haven</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="./style.css">
+
+    <style>
+
+        /* =========================================
+           ANIMAL PAGE ADDITIONAL DESIGN
+        ========================================= */
+
+        .ph-animal-intro {
+            margin-bottom: 28px;
+        }
+
+        .ph-animal-intro p {
+            max-width: 650px;
+            line-height: 1.8;
+        }
+
+        .ph-animal-hero-image {
+            position: relative;
+            overflow: hidden;
+            border-radius: 22px;
+            min-height: 280px;
+        }
+
+        .ph-animal-hero-image img {
+            width: 100%;
+            height: 100%;
+            min-height: 280px;
+            object-fit: cover;
+        }
+
+        .ph-animal-image-label {
+            position: absolute;
+            bottom: 18px;
+            left: 18px;
+            right: 18px;
+            padding: 15px 18px;
+            background: rgba(255,255,255,0.92);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ph-animal-image-label i {
+            color: #71836b;
+            font-size: 23px;
+        }
+
+        .ph-animal-image-label strong {
+            display: block;
+            color: #384438;
+        }
+
+        .ph-animal-image-label small {
+            color: #858b82;
+        }
+
+
+        /* STATISTICS */
+
+        .ph-animal-stat {
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .ph-animal-stat:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px rgba(48, 60, 43, 0.09);
+        }
+
+        .ph-animal-stat h3 {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 14px 0 5px;
+            color: #344334;
+        }
+
+
+        /* EXTRA INFORMATION PANEL */
+
+        .ph-animal-info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .ph-animal-info-card {
+            background: #fff;
+            border: 1px solid #eeeae3;
+            border-radius: 17px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .ph-animal-info-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+            flex-shrink: 0;
+        }
+
+        .ph-animal-info-icon.sage {
+            background: #e9eee5;
+            color: #71836b;
+        }
+
+        .ph-animal-info-icon.peach {
+            background: #f8e9df;
+            color: #c58d70;
+        }
+
+        .ph-animal-info-icon.lilac {
+            background: #eee9f5;
+            color: #9380ac;
+        }
+
+        .ph-animal-info-card strong {
+            display: block;
+            font-size: 14px;
+            color: #394439;
+        }
+
+        .ph-animal-info-card small {
+            color: #92978e;
+            font-size: 12px;
+        }
+
+
+        /* TOOLBAR */
+
+        .ph-record-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+
+        .ph-search-box {
+            flex: 1;
+            min-width: 220px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #e9e8e1;
+            border-radius: 10px;
+            padding: 0 14px;
+            background: #fff;
+        }
+
+        .ph-search-box i {
+            color: #8b9787;
+        }
+
+        .ph-search-box input {
+            width: 100%;
+            border: none;
+            outline: none;
+            padding: 12px 0;
+            background: transparent;
+            font-family: inherit;
+            font-size: 13px;
+        }
+
+        .ph-filter-select {
+            border: 1px solid #e9e8e1;
+            border-radius: 10px;
+            padding: 12px 14px;
+            color: #536052;
+            background: #fff;
+            min-width: 155px;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .ph-record-toolbar .ph-primary-button {
+            border: none;
+            white-space: nowrap;
+        }
+
+
+        /* TABLE */
+
+        .ph-table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .ph-animal-table {
+            width: 100%;
+            min-width: 750px;
+            border-collapse: collapse;
+        }
+
+        .ph-animal-table th {
+            background: #f8f8f4;
+            color: #7c8578;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.7px;
+            text-transform: uppercase;
+            padding: 16px;
+            white-space: nowrap;
+        }
+
+        .ph-animal-table td {
+            padding: 17px 16px;
+            border-bottom: 1px solid #f0eee8;
+            font-size: 13px;
+            color: #596257;
+            vertical-align: middle;
+        }
+
+        .ph-animal-table tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        .ph-animal-table tbody tr:hover {
+            background: #fbfcf9;
+        }
+
+        .ph-animal-name {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            font-weight: 700;
+            color: #3e493c;
+        }
+
+        .ph-animal-avatar {
+            width: 37px;
+            height: 37px;
+            border-radius: 12px;
+            background: #edf1e9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #71836b;
+            font-size: 16px;
+        }
+
+        .ph-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 11px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .ph-status.available {
+            background: #e8f1e6;
+            color: #5d8058;
+        }
+
+        .ph-status.adopted {
+            background: #f4e8df;
+            color: #b77c5c;
+        }
+
+        .ph-status.care {
+            background: #eee9f5;
+            color: #8976a5;
+        }
+
+        .ph-delete-btn {
+            border: 1px solid #f0d9d5;
+            color: #c77b70;
+            background: #fff;
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            transition: 0.2s;
+        }
+
+        .ph-delete-btn:hover {
+            background: #c77b70;
+            color: #fff;
+        }
+
+        .ph-table-footer {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            color: #92978e;
+            font-size: 12px;
+        }
+
+
+        /* MODAL */
+
+        .ph-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(31, 39, 30, 0.55);
+            padding: 20px;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+        }
+
+        .ph-modal.show {
+            display: flex;
+        }
+
+        .ph-modal-card {
+            width: 100%;
+            max-width: 650px;
+            background: #fff;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            animation: phModalAppear 0.25s ease;
+        }
+
+        @keyframes phModalAppear {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .ph-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 25px;
+        }
+
+        .ph-modal-header h2 {
+            font-family: "Playfair Display", serif;
+            color: #3e493c;
+            margin: 7px 0;
+            font-size: 26px;
+        }
+
+        .ph-modal-header p {
+            font-size: 13px;
+            color: #92978e;
+            margin: 0;
+        }
+
+        .ph-modal-close {
+            border: none;
+            background: #f3f3ef;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 24px;
+            color: #64705f;
+            line-height: 1;
+        }
+
+        .ph-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .ph-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .ph-form-group label {
+            color: #536052;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .ph-form-group input,
+        .ph-form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e7e8e1;
+            border-radius: 9px;
+            outline: none;
+            font-family: inherit;
+            font-size: 13px;
+            color: #536052;
+            background: #fff;
+        }
+
+        .ph-form-group input:focus,
+        .ph-form-group select:focus {
+            border-color: #8b9b81;
+            box-shadow: 0 0 0 3px rgba(113,131,107,0.1);
+        }
+
+        .ph-modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid #efeee9;
+        }
+
+        .ph-secondary-button {
+            border: 1px solid #e4e5df;
+            background: #fff;
+            color: #6e776b;
+            border-radius: 9px;
+            padding: 11px 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .ph-modal-actions .ph-primary-button {
+            border: none;
+        }
+
+
+        /* BOTTOM BANNER */
+
+        .ph-animal-reminder {
+            margin-top: 30px;
+        }
+
+
+        /* RESPONSIVE */
+
+        @media (max-width: 900px) {
+
+            .ph-animal-info-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .ph-animal-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .ph-form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .ph-modal-card {
+                padding: 22px;
+            }
+
+            .ph-record-toolbar {
+                padding: 15px;
+            }
+
+            .ph-filter-select {
+                width: 100%;
+            }
+
+            .ph-record-toolbar .ph-primary-button {
+                width: 100%;
+            }
+
+            .ph-modal-actions {
+                flex-direction: column-reverse;
+            }
+
+            .ph-modal-actions button {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body class="app-page">
+
+<div class="ph-layout">
+
+    <!-- =====================================
+         SIDEBAR
+    ====================================== -->
+
+    <aside class="ph-sidebar" id="sidebar">
+
+        <div class="ph-brand">
+
+            <div class="ph-brand-icon">
+                <i class="fa-solid fa-paw"></i>
+            </div>
+
+            <div>
+                <h2>Paw Haven</h2>
+                <span>ANIMAL SHELTER MANAGEMENT</span>
+            </div>
+
+        </div>
+
+
+        <div class="ph-profile">
+
+            <div class="ph-avatar" id="adminAvatar">A</div>
+
+            <div>
+                <strong id="adminName">Paw Haven Admin</strong>
+                <small>Admin account</small>
+            </div>
+
+        </div>
+
+
+        <p class="ph-nav-label">MAIN MENU</p>
+
+
+        <nav class="ph-navigation">
+
+            <a href="dashboard.html">
+                <span class="ph-nav-icon">⌂</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="animals.html" class="active">
+                <span class="ph-nav-icon">🐾</span>
+                <span>Animal Management</span>
+            </a>
+
+            <a href="applications.html">
+                <span class="ph-nav-icon">▤</span>
+                <span>Applications</span>
+            </a>
+
+            <a href="about.html">
+                <span class="ph-nav-icon">♡</span>
+                <span>About Us</span>
+            </a>
+
+        </nav>
+
+
+        <div class="ph-sidebar-bottom">
+
+            <div class="ph-sidebar-note">
+                <span>♡</span>
+                <p>Every paw deserves a loving home.</p>
+            </div>
+
+            <a href="#" id="logoutLink" class="ph-logout">
+                <span>⇥</span>
+                Log Out
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================
+         MAIN CONTENT
+    ====================================== -->
+
+    <main class="ph-main">
+
+
+        <!-- TOPBAR -->
+
+        <header class="ph-topbar">
+
+            <div class="ph-topbar-left">
+
+                <button class="ph-menu-btn" id="mobileMenuBtn" type="button">
+                    ☰
+                </button>
+
+                <div>
+                    <span class="ph-eyebrow">PAW HAVEN / ANIMAL RECORDS</span>
+                    <h1>Animal Management</h1>
+                </div>
+
+            </div>
+
+
+            <div class="ph-topbar-right">
+
+                <div class="ph-topbar-admin">
+                    <span>Welcome back,</span>
+                    <strong id="adminTopbarName">Administrator</strong>
+                </div>
+
+                <div class="ph-topbar-avatar">🐾</div>
+
+            </div>
+
+        </header>
+
+
+        <!-- PAGE CONTENT -->
+
+        <div class="ph-content">
+
+
+            <!-- =====================================
+                 HERO SECTION
+            ====================================== -->
+
+            <section class="ph-page-hero">
+
+                <div class="ph-page-hero-copy">
+
+                    <span class="ph-small-tag">
+                        <i class="fa-solid fa-heart"></i>
+                        OUR LITTLE FRIENDS
+                    </span>
+
+                    <h2>
+                        Every little life deserves
+                        <em>a loving home.</em>
+                    </h2>
+
+                    <p>
+                        Welcome to the Paw Haven animal records.
+                        Manage animal information, monitor their health
+                        and adoption status, and keep track of every
+                        little friend in our shelter.
+                    </p>
+
+                    <button
+                        class="ph-primary-button"
+                        type="button"
+                        onclick="openAnimalModal()">
+
+                        <i class="fa-solid fa-plus"></i>
+                        Add New Animal
+
+                    </button>
+
+                </div>
+
+
+                <div class="ph-page-hero-image ph-animal-hero-image">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=1000"
+                        alt="Cute cat at an animal shelter">
+
+                    <div class="ph-animal-image-label">
+
+                        <i class="fa-solid fa-heart"></i>
+
+                        <div>
+                            <strong>Every paw matters</strong>
+                            <small>Care, kindness and a forever home.</small>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =====================================
+                 STATISTICS
+            ====================================== -->
+
+            <section class="ph-section">
+
+                <div class="ph-section-heading">
+
+                    <div>
+                        <span class="ph-eyebrow">SHELTER OVERVIEW</span>
+                        <h2>Animal Statistics</h2>
+                        <p>A quick overview of our registered animals.</p>
+                    </div>
+
+                    <span class="ph-updated">
+                        <i class="fa-regular fa-clock"></i>
+                        Live records
+                    </span>
+
+                </div>
+
+
+                <div class="ph-stats-grid">
+
+
+                    <!-- TOTAL ANIMALS -->
+
+                    <div class="ph-stat-card ph-animal-stat">
+
+                        <div class="ph-stat-top">
+
+                            <span class="ph-stat-icon sage-icon">
+                                <i class="fa-solid fa-paw"></i>
+                            </span>
+
+                            <span class="ph-stat-caption">
+                                TOTAL ANIMALS
+                            </span>
+
+                        </div>
+
+                        <strong id="totalAnimals">0</strong>
+
+                        <p>Registered in the shelter</p>
+
+                    </div>
+
+
+
+                    <!-- AVAILABLE -->
+
+                    <div class="ph-stat-card ph-animal-stat">
+
+                        <div class="ph-stat-top">
+
+                            <span class="ph-stat-icon peach-icon">
+                                <i class="fa-solid fa-house"></i>
+                            </span>
+
+                            <span class="ph-stat-caption">
+                                AVAILABLE
+                            </span>
+
+                        </div>
+
+                        <strong id="availableAnimals">0</strong>
+
+                        <p>Looking for a forever home</p>
+
+                    </div>
+
+
+
+                    <!-- ADOPTED -->
+
+                    <div class="ph-stat-card ph-animal-stat">
+
+                        <div class="ph-stat-top">
+
+                            <span class="ph-stat-icon lilac-icon">
+                                <i class="fa-solid fa-heart"></i>
+                            </span>
+
+                            <span class="ph-stat-caption">
+                                ADOPTED
+                            </span>
+
+                        </div>
+
+                        <strong id="adoptedAnimals">0</strong>
+
+                        <p>Successfully adopted</p>
+
+                    </div>
+
+
+
+                    <!-- PENDING APPLICATIONS -->
+
+                    <div class="ph-stat-card ph-animal-stat">
+
+                        <div class="ph-stat-top">
+
+                            <span class="ph-stat-icon yellow-icon">
+                                <i class="fa-solid fa-file-circle-check"></i>
+                            </span>
+
+                            <span class="ph-stat-caption">
+                                PENDING
+                            </span>
+
+                        </div>
+
+                        <strong id="pendingApplications">0</strong>
+
+                        <p>Applications awaiting review</p>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =====================================
+                 ADDITIONAL INFORMATION CARDS
+            ====================================== -->
+
+            <section class="ph-animal-info-grid">
+
+                <div class="ph-animal-info-card">
+
+                    <div class="ph-animal-info-icon sage">
+                        <i class="fa-solid fa-database"></i>
+                    </div>
+
+                    <div>
+                        <strong>Organised Records</strong>
+                        <small>Keep animal information updated.</small>
+                    </div>
+
+                </div>
+
+
+                <div class="ph-animal-info-card">
+
+                    <div class="ph-animal-info-icon peach">
+                        <i class="fa-solid fa-house-heart"></i>
+                    </div>
+
+                    <div>
+                        <strong>Responsible Adoption</strong>
+                        <small>Help animals find suitable homes.</small>
+                    </div>
+
+                </div>
+
+
+                <div class="ph-animal-info-card">
+
+                    <div class="ph-animal-info-icon lilac">
+                        <i class="fa-solid fa-shield-heart"></i>
+                    </div>
+
+                    <div>
+                        <strong>Animal Well-being</strong>
+                        <small>Monitor every animal's status.</small>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =====================================
+                 ANIMAL RECORDS
+            ====================================== -->
+
+            <section class="ph-section">
+
+                <div class="ph-section-heading">
+
+                    <div>
+                        <span class="ph-eyebrow">DATABASE MANAGEMENT</span>
+                        <h2>Animal Records</h2>
+                        <p>
+                            Search, filter, add or remove registered animals.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="ph-panel">
+
+
+                    <!-- SEARCH AND FILTER -->
+
+                    <div class="ph-record-toolbar">
+
+                        <div class="ph-search-box">
+
+                            <i class="fa-solid fa-magnifying-glass"></i>
+
+                            <input
+                                type="text"
+                                id="animalSearch"
+                                placeholder="Search by name, species or breed...">
+
+                        </div>
+
+
+                        <select
+                            id="animalFilter"
+                            class="ph-filter-select">
+
+                            <option value="All">All Status</option>
+                            <option value="Available">Available</option>
+                            <option value="Adopted">Adopted</option>
+                            <option value="Under Care">Under Care</option>
+
+                        </select>
+
+
+                        <button
+                            class="ph-primary-button ph-add-button"
+                            type="button"
+                            onclick="openAnimalModal()">
+
+                            <i class="fa-solid fa-plus"></i>
+                            Add Animal
+
+                        </button>
+
+                    </div>
+
+
+
+                    <!-- TABLE -->
+
+                    <div class="ph-table-wrapper">
+
+                        <table class="ph-animal-table">
+
+                            <thead>
+
+                                <tr>
+                                    <th>ANIMAL NAME</th>
+                                    <th>SPECIES</th>
+                                    <th>BREED</th>
+                                    <th>AGE</th>
+                                    <th>GENDER</th>
+                                    <th>STATUS</th>
+                                    <th>ACTION</th>
+                                </tr>
+
+                            </thead>
+
+<tbody id="animalTableBody">
+    <tr>
+        <td colspan="7" class="text-center">
+            Loading animal records...
+        </td>
+    </tr>
+</tbody>
+                        </table>
+
+                    </div>
+
+
+
+                    <!-- TABLE FOOTER -->
+
+                    <div class="ph-table-footer">
+
+                        <span>
+                            <i class="fa-solid fa-circle-info"></i>
+                            Animal records are stored in Paw Haven.
+                        </span>
+
+                        <span>
+                            <i class="fa-solid fa-paw"></i>
+                            Every animal deserves a loving home.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =====================================
+                 RESPONSIBLE CARE REMINDER
+            ====================================== -->
+
+            <section class="ph-bottom-banner ph-animal-reminder">
+
+                <div>
+
+                    <span class="ph-eyebrow">
+                        A LITTLE REMINDER
+                    </span>
+
+                    <h2>
+                        Small paws, big dreams.
+                    </h2>
+
+                    <p>
+                        Behind every animal record is a life that deserves
+                        kindness, care, protection and a loving home.
+                    </p>
+
+                </div>
+
+                <span class="ph-banner-heart">♡</span>
+
+            </section>
+
+
+
+            <!-- FOOTER -->
+
+            <footer class="ph-footer">
+
+                <span>
+                    © <span id="currentYear"></span>
+                    Paw Haven Animal Shelter.
+                    All rights reserved.
+                </span>
+
+                <span>
+                    Made with ♡ for every animal.
+                </span>
+
+            </footer>
+
+
+        </div>
+
+    </main>
+
+</div>
+
+
+
+<!-- =====================================
+     ADD ANIMAL MODAL
+====================================== -->
+
+<div class="ph-modal" id="addAnimalModal">
+
+    <div class="ph-modal-card">
+
+
+        <!-- MODAL HEADER -->
+
+        <div class="ph-modal-header">
+
+            <div>
+
+                <span class="ph-eyebrow">
+                    ANIMAL DATABASE
+                </span>
+
+                <h2>Add New Animal</h2>
+
+                <p>
+                    Enter the information of the new shelter animal.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="ph-modal-close"
+                onclick="closeAnimalModal()"
+                aria-label="Close modal">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+
+        <!-- ANIMAL FORM -->
+
+        <form id="addAnimalForm">
+
+            <div class="ph-form-grid">
+
+
+                <div class="ph-form-group">
+
+                    <label for="animalName">
+                        Animal Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="animalName"
+                        placeholder="e.g. Milo"
+                        required>
+
+                </div>
+
+
+
+                <div class="ph-form-group">
+
+                    <label for="animalSpecies">
+                        Species
+                    </label>
+
+                    <select id="animalSpecies" required>
+
+                        <option value="">Select species</option>
+                        <option value="Cat">Cat</option>
+                        <option value="Dog">Dog</option>
+                        <option value="Rabbit">Rabbit</option>
+                        <option value="Bird">Bird</option>
+                        <option value="Other">Other</option>
+
+                    </select>
+
+                </div>
+
+
+
+                <div class="ph-form-group">
+
+                    <label for="animalBreed">
+                        Breed
+                    </label>
+
+                    <input
+                        type="text"
+                        id="animalBreed"
+                        placeholder="e.g. Persian"
+                        required>
+
+                </div>
+
+
+
+                <div class="ph-form-group">
+
+                    <label for="animalAge">
+                        Age
+                    </label>
+
+                    <input
+                        type="text"
+                        id="animalAge"
+                        placeholder="e.g. 2 years"
+                        required>
+
+                </div>
+
+
+
+                <div class="ph-form-group">
+
+                    <label for="animalGender">
+                        Gender
+                    </label>
+
+                    <select id="animalGender" required>
+
+                        <option value="">Select gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+
+                    </select>
+
+                </div>
+
+
+
+                <div class="ph-form-group">
+
+                    <label for="animalStatus">
+                        Adoption Status
+                    </label>
+
+                    <select id="animalStatus" required>
+
+                        <option value="">Select status</option>
+                        <option value="Available">Available</option>
+                        <option value="Adopted">Adopted</option>
+                        <option value="Under Care">Under Care</option>
+
+                    </select>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- MODAL BUTTONS -->
+
+            <div class="ph-modal-actions">
+
+                <button
+                    type="button"
+                    class="ph-secondary-button"
+                    onclick="closeAnimalModal()">
+
+                    Cancel
+
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="ph-primary-button">
+
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    Save Animal
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================
+     JAVASCRIPT
+====================================== -->
+
+<script src="js/script.js"></script>
+
+
+<script>
+
+    /* OPEN ADD ANIMAL MODAL */
+
+    function openAnimalModal() {
+
+        const modal = document.getElementById("addAnimalModal");
+
+        if (modal) {
+
+            modal.classList.add("show");
+
+            document.body.style.overflow = "hidden";
+
+            document.getElementById("animalName").focus();
+
+        }
+
+    }
+
+
+    /* CLOSE ADD ANIMAL MODAL */
+
+    function closeAnimalModal() {
+
+        const modal = document.getElementById("addAnimalModal");
+
+        if (modal) {
+
+            modal.classList.remove("show");
+
+            document.body.style.overflow = "";
+
+        }
+
+    }
+
+
+    /* CLOSE MODAL WHEN CLICKING OUTSIDE */
+
+    document.getElementById("addAnimalModal").addEventListener(
+        "click",
+        function(event) {
+
+            if (event.target === this) {
+
+                closeAnimalModal();
+
+            }
+
+        }
+    );
+
+
+    /* CLOSE MODAL USING ESCAPE KEY */
+
+    document.addEventListener("keydown", function(event) {
+
+        if (event.key === "Escape") {
+
+            closeAnimalModal();
+
+        }
+
+    });
+
+
+    /* CLOSE MODAL AFTER SUCCESSFUL ANIMAL SUBMISSION */
+
+    document.getElementById("addAnimalForm").addEventListener(
+        "submit",
+        function() {
+
+            setTimeout(function() {
+
+                const nameField = document.getElementById("animalName");
+
+                // If the form was reset, the animal was successfully added.
+                if (nameField && nameField.value === "") {
+
+                    closeAnimalModal();
+
+                }
+
+            }, 100);
+
+        }
+    );
+
+
+    /* CURRENT YEAR */
+
+    document.getElementById("currentYear").textContent =
+        new Date().getFullYear();
+
+</script>
+
+</body>
+</html>
