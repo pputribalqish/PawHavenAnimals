@@ -223,17 +223,34 @@ async function handleRegistration(event) {
    4. LOGOUT
 ===================================================== */
 
+// LOGOUT FUNCTION
 async function handleLogout(event) {
-    if (event) event.preventDefault();
 
-    const { error } = await db.auth.signOut();
-
-    if (error) {
-        alert(error.message);
-        return;
+    if (event) {
+        event.preventDefault();
     }
 
-    window.location.href = "login.html";
+    try {
+
+        const { error } = await supabaseClient.auth.signOut();
+
+        if (error) {
+            throw error;
+        }
+
+        // Clear old local session
+        localStorage.removeItem("pawhaven_current_user");
+
+        // Redirect to login page
+        window.location.href = "./login.html";
+
+    } catch (error) {
+
+        console.error("Logout error:", error);
+
+        alert("Unable to logout. Please try again.");
+
+    }
 }
 
 
@@ -970,4 +987,17 @@ document.addEventListener("DOMContentLoaded", async function() {
         console.error("Paw Haven initialisation error:", error);
         alert("Paw Haven could not load: " + error.message);
     }
+});
+
+// LOGOUT BUTTON EVENT
+document.addEventListener("click", function(event) {
+
+    const logoutButton = event.target.closest(
+        "#logoutLink, #logoutBtn, .logout-btn, [data-logout]"
+    );
+
+    if (logoutButton) {
+        handleLogout(event);
+    }
+
 });
