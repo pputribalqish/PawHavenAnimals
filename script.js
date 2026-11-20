@@ -6,9 +6,7 @@
 ========================================================= */
 
 
-/* =========================================================
-   1. STORAGE KEYS
-========================================================= */
+/* 1. STORAGE KEYS */
 
 const STORAGE_KEYS = {
     users: "pawhaven_users",
@@ -18,9 +16,7 @@ const STORAGE_KEYS = {
 };
 
 
-/* =========================================================
-   2. DEFAULT ADMIN ACCOUNT
-========================================================= */
+/* 2. DEFAULT ADMIN */
 
 const DEFAULT_ADMIN = {
     id: "pawhaven-admin",
@@ -33,123 +29,46 @@ const DEFAULT_ADMIN = {
 };
 
 
-/* =========================================================
-   3. DEFAULT ANIMAL RECORDS
-========================================================= */
+/* 3. DEFAULT ANIMALS */
 
 const DEFAULT_ANIMALS = [
-    {
-        id: "default-milo",
-        name: "Milo",
-        species: "Cat",
-        breed: "Persian",
-        age: "2 years",
-        gender: "Male",
-        status: "Available"
-    },
-    {
-        id: "default-luna",
-        name: "Luna",
-        species: "Cat",
-        breed: "Domestic Shorthair",
-        age: "1 year",
-        gender: "Female",
-        status: "Available"
-    },
-    {
-        id: "default-buddy",
-        name: "Buddy",
-        species: "Dog",
-        breed: "Golden Retriever",
-        age: "3 years",
-        gender: "Male",
-        status: "Adopted"
-    },
-    {
-        id: "default-coco",
-        name: "Coco",
-        species: "Dog",
-        breed: "Poodle",
-        age: "8 months",
-        gender: "Female",
-        status: "Under Care"
-    },
-    {
-        id: "default-oreo",
-        name: "Oreo",
-        species: "Rabbit",
-        breed: "Mini Lop",
-        age: "1 year",
-        gender: "Male",
-        status: "Available"
-    }
+    { id: "default-milo", name: "Milo", species: "Cat", type: "Cat", breed: "Persian", age: "2 years", gender: "Male", status: "Available" },
+    { id: "default-luna", name: "Luna", species: "Cat", type: "Cat", breed: "Domestic Shorthair", age: "1 year", gender: "Female", status: "Available" },
+    { id: "default-buddy", name: "Buddy", species: "Dog", type: "Dog", breed: "Golden Retriever", age: "3 years", gender: "Male", status: "Adopted" },
+    { id: "default-coco", name: "Coco", species: "Dog", type: "Dog", breed: "Poodle", age: "8 months", gender: "Female", status: "Under Care" },
+    { id: "default-oreo", name: "Oreo", species: "Rabbit", type: "Rabbit", breed: "Mini Lop", age: "1 year", gender: "Male", status: "Available" }
 ];
 
 
-/* =========================================================
-   4. DEFAULT APPLICATION RECORDS
-========================================================= */
+/* 4. DEFAULT APPLICATIONS */
 
 const DEFAULT_APPLICATIONS = [
-    {
-        id: "default-app-1",
-        applicant: "Sarah Tan",
-        animal: "Milo",
-        date: "2026-10-20",
-        status: "Pending"
-    },
-    {
-        id: "default-app-2",
-        applicant: "Adam Lee",
-        animal: "Buddy",
-        date: "2026-10-22",
-        status: "Approved"
-    },
-    {
-        id: "default-app-3",
-        applicant: "Aina Rahman",
-        animal: "Luna",
-        date: "2026-10-25",
-        status: "Pending"
-    },
-    {
-        id: "default-app-4",
-        applicant: "Daniel Wong",
-        animal: "Coco",
-        date: "2026-10-28",
-        status: "Declined"
-    }
+    { id: "default-app-1", applicant: "Sarah Tan", animal: "Milo", email: "sarah@gmail.com", date: "2026-10-20", status: "Pending" },
+    { id: "default-app-2", applicant: "Adam Lee", animal: "Buddy", email: "adam@gmail.com", date: "2026-10-22", status: "Approved" },
+    { id: "default-app-3", applicant: "Aina Rahman", animal: "Luna", email: "aina@gmail.com", date: "2026-10-25", status: "Pending" },
+    { id: "default-app-4", applicant: "Daniel Wong", animal: "Coco", email: "daniel@gmail.com", date: "2026-10-28", status: "Declined" }
 ];
 
 
-/* =========================================================
-   5. STORAGE FUNCTIONS
-========================================================= */
+/* 5. STORAGE FUNCTIONS */
 
 function getStorage(key, fallback = []) {
     try {
         const savedData = localStorage.getItem(key);
 
-        if (savedData === null) {
-            return fallback;
-        }
+        if (savedData === null) return fallback;
 
-        const parsedData = JSON.parse(savedData);
-
-        return parsedData;
-
+        return JSON.parse(savedData);
     } catch (error) {
         console.error("Storage reading error:", error);
         return fallback;
     }
 }
 
-
 function saveStorage(key, data) {
     try {
         localStorage.setItem(key, JSON.stringify(data));
         return true;
-
     } catch (error) {
         console.error("Storage saving error:", error);
         alert("Unable to save data in this browser.");
@@ -157,162 +76,154 @@ function saveStorage(key, data) {
     }
 }
 
-
 function createId(prefix = "ph") {
-    return prefix + "-" +
-        Date.now() + "-" +
+    return prefix + "-" + Date.now() + "-" +
         Math.random().toString(36).substring(2, 8);
 }
-
 
 function normaliseText(value) {
     return String(value ?? "").trim().toLowerCase();
 }
 
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[character]);
+}
 
-/* =========================================================
-   6. INITIALISE DATA
-   Existing records are preserved.
-   Missing default records are added only once.
-========================================================= */
+
+/* 6. INITIALISE DATA */
 
 function initialiseData() {
-
-    // Initialise users without deleting existing users.
     let users = getStorage(STORAGE_KEYS.users, []);
 
-    if (!Array.isArray(users)) {
-        users = [];
-    }
+    if (!Array.isArray(users)) users = [];
 
     const adminExists = users.some(user =>
         normaliseText(user.username) === "admin" ||
         normaliseText(user.email) === "admin@pawhaven.com"
     );
 
-    if (!adminExists) {
-        users.push({ ...DEFAULT_ADMIN });
-    }
+    if (!adminExists) users.push({ ...DEFAULT_ADMIN });
 
     saveStorage(STORAGE_KEYS.users, users);
 
 
-    // Initialise animals and preserve existing records.
     let animals = getStorage(STORAGE_KEYS.animals, []);
 
-    if (!Array.isArray(animals)) {
-        animals = [];
-    }
+    if (!Array.isArray(animals)) animals = [];
 
-    DEFAULT_ANIMALS.forEach(defaultAnimal => {
-
-        const alreadyExists = animals.some(animal =>
-            normaliseText(animal.name) ===
-            normaliseText(defaultAnimal.name)
-        );
-
-        if (!alreadyExists) {
-            animals.push({ ...defaultAnimal });
+    // Support older records that used "type".
+    animals.forEach(animal => {
+        if (!animal.species && animal.type) {
+            animal.species = animal.type;
         }
 
+        if (!animal.type && animal.species) {
+            animal.type = animal.species;
+        }
+    });
+
+    DEFAULT_ANIMALS.forEach(defaultAnimal => {
+        const exists = animals.some(animal =>
+            normaliseText(animal.name) === normaliseText(defaultAnimal.name)
+        );
+
+        if (!exists) animals.push({ ...defaultAnimal });
     });
 
     saveStorage(STORAGE_KEYS.animals, animals);
 
 
-    // Initialise applications and preserve existing records.
-    let applications = getStorage(
-        STORAGE_KEYS.applications,
-        []
-    );
+    let applications = getStorage(STORAGE_KEYS.applications, []);
 
-    if (!Array.isArray(applications)) {
-        applications = [];
-    }
+    if (!Array.isArray(applications)) applications = [];
 
     DEFAULT_APPLICATIONS.forEach(defaultApplication => {
+        const exists = applications.some(application =>
+            normaliseText(application.applicant) === normaliseText(defaultApplication.applicant) &&
+            normaliseText(application.animal) === normaliseText(defaultApplication.animal) &&
+            String(application.date || "") === defaultApplication.date
+        );
 
-        const alreadyExists = applications.some(application => {
-
-            return (
-                normaliseText(application.applicant) ===
-                normaliseText(defaultApplication.applicant) &&
-
-                normaliseText(application.animal) ===
-                normaliseText(defaultApplication.animal) &&
-
-                String(application.date || "") ===
-                defaultApplication.date
-            );
-
-        });
-
-        if (!alreadyExists) {
-            applications.push({ ...defaultApplication });
-        }
-
+        if (!exists) applications.push({ ...defaultApplication });
     });
 
     saveStorage(STORAGE_KEYS.applications, applications);
-
 }
 
 
-/* =========================================================
-   7. LOGIN
-========================================================= */
+/* 7. GET DATA */
 
-async function handleLogin(event) {
+function getAnimals() {
+    const animals = getStorage(STORAGE_KEYS.animals, []);
+    return Array.isArray(animals) ? animals : [];
+}
 
-    if (event) {
-        event.preventDefault();
+function getApplications() {
+    const applications = getStorage(STORAGE_KEYS.applications, []);
+    return Array.isArray(applications) ? applications : [];
+}
+
+function getUsers() {
+    const users = getStorage(STORAGE_KEYS.users, []);
+    return Array.isArray(users) ? users : [];
+}
+
+function getCurrentUser() {
+    return getStorage(STORAGE_KEYS.currentUser, null);
+}
+
+
+/* 8. MESSAGE HELPER */
+
+function showMessage(element, message, type = "error") {
+    if (!element) {
+        if (type === "error") alert(message);
+        return;
     }
+
+    element.textContent = message;
+    element.className = "form-feedback " + type;
+    element.style.display = "block";
+}
+
+
+/* 9. LOGIN */
+
+function handleLogin(event) {
+    if (event) event.preventDefault();
 
     const usernameInput = document.getElementById("username");
     const passwordInput = document.getElementById("password");
     const messageElement = document.getElementById("loginMessage");
 
-    if (!usernameInput || !passwordInput) {
-        return;
-    }
+    if (!usernameInput || !passwordInput) return;
 
     const username = usernameInput.value.trim();
     const password = passwordInput.value;
 
     if (!username || !password) {
-
-        showMessage(
-            messageElement,
-            "Please enter your username and password.",
-            "error"
-        );
-
+        showMessage(messageElement, "Please enter your username and password.");
         return;
     }
 
-    const users = getStorage(STORAGE_KEYS.users, []);
+    const users = getUsers();
 
-    const matchedUser = users.find(user => {
-
-        const usernameMatches =
+    const matchedUser = users.find(user =>
+        (
             normaliseText(user.username) === normaliseText(username) ||
-            normaliseText(user.email) === normaliseText(username);
-
-        const passwordMatches =
-            String(user.password || "") === password;
-
-        return usernameMatches && passwordMatches;
-
-    });
+            normaliseText(user.email) === normaliseText(username)
+        ) &&
+        String(user.password || "") === password
+    );
 
     if (!matchedUser) {
-
-        showMessage(
-            messageElement,
-            "Invalid username or password.",
-            "error"
-        );
-
+        showMessage(messageElement, "Invalid username or password.");
         return;
     }
 
@@ -324,27 +235,16 @@ async function handleLogin(event) {
         role: matchedUser.role || "user"
     };
 
-    saveStorage(STORAGE_KEYS.currentUser, currentUser);
-
-    showMessage(
-        messageElement,
-        "Login successful! Redirecting...",
-        "success"
-    );
-
-    window.location.href = "./dashboard.html";
+    if (saveStorage(STORAGE_KEYS.currentUser, currentUser)) {
+        window.location.href = "./dashboard.html";
+    }
 }
 
 
-/* =========================================================
-   8. REGISTRATION
-========================================================= */
+/* 10. REGISTRATION */
 
-async function handleRegistration(event) {
-
-    if (event) {
-        event.preventDefault();
-    }
+function handleRegistration(event) {
+    if (event) event.preventDefault();
 
     const fullName = document.getElementById("fullName")?.value.trim();
     const email = document.getElementById("email")?.value.trim();
@@ -355,139 +255,76 @@ async function handleRegistration(event) {
     const messageElement = document.getElementById("registerMessage");
 
     if (!fullName || !email || !username || !password || !confirmPassword) {
-
-        showMessage(
-            messageElement,
-            "Please complete all required fields.",
-            "error"
-        );
-
+        showMessage(messageElement, "Please complete all required fields.");
         return;
     }
 
     if (password.length < 6) {
-
-        showMessage(
-            messageElement,
-            "Password must contain at least 6 characters.",
-            "error"
-        );
-
+        showMessage(messageElement, "Password must contain at least 6 characters.");
         return;
     }
 
     if (password !== confirmPassword) {
-
-        showMessage(
-            messageElement,
-            "Passwords do not match.",
-            "error"
-        );
-
+        showMessage(messageElement, "Passwords do not match.");
         return;
     }
 
-    const agreeTerms = document.getElementById("agreeTerms");
+    const agreeTerms =
+        document.getElementById("agreeTerms") ||
+        document.getElementById("terms") ||
+        document.getElementById("termsCheckbox");
 
     if (agreeTerms && !agreeTerms.checked) {
-
-        showMessage(
-            messageElement,
-            "Please agree to the terms and conditions.",
-            "error"
-        );
-
+        showMessage(messageElement, "Please agree to the terms and conditions.");
         return;
     }
 
-    const users = getStorage(STORAGE_KEYS.users, []);
+    const users = getUsers();
 
-    const duplicateUser = users.some(user => {
-
-        return (
-            normaliseText(user.username) === normaliseText(username) ||
-            normaliseText(user.email) === normaliseText(email)
-        );
-
-    });
-
-    if (duplicateUser) {
-
-        showMessage(
-            messageElement,
-            "Username or email already exists.",
-            "error"
-        );
-
-        return;
-    }
-
-    const newUser = {
-        id: createId("user"),
-        fullName: fullName,
-        name: fullName,
-        email: email,
-        username: username,
-        password: password,
-        role: "user"
-    };
-
-    users.push(newUser);
-
-    const saved = saveStorage(STORAGE_KEYS.users, users);
-
-    if (!saved) {
-        return;
-    }
-
-    showMessage(
-        messageElement,
-        "Registration successful! You can now sign in.",
-        "success"
+    const duplicate = users.some(user =>
+        normaliseText(user.username) === normaliseText(username) ||
+        normaliseText(user.email) === normaliseText(email)
     );
 
-    const registrationForm =
-        document.getElementById("registrationForm");
-
-    if (registrationForm) {
-        registrationForm.reset();
+    if (duplicate) {
+        showMessage(messageElement, "Username or email already exists.");
+        return;
     }
 
+    users.push({
+        id: createId("user"),
+        fullName,
+        name: fullName,
+        email,
+        username,
+        password,
+        role: "user"
+    });
+
+    if (saveStorage(STORAGE_KEYS.users, users)) {
+        showMessage(messageElement, "Registration successful! You can now sign in.", "success");
+
+        document.getElementById("registrationForm")?.reset();
+        document.getElementById("registerForm")?.reset();
+    }
 }
 
 
-/* =========================================================
-   9. LOGOUT
-========================================================= */
+/* 11. LOGOUT */
 
 function handleLogout(event) {
+    if (event) event.preventDefault();
 
-    if (event) {
-        event.preventDefault();
-    }
-
+    // Remove login session only. Animal and application data remain saved.
     localStorage.removeItem(STORAGE_KEYS.currentUser);
 
     window.location.href = "./login.html";
 }
 
 
-/* =========================================================
-   10. LOGIN SESSION
-========================================================= */
-
-function getCurrentUser() {
-
-    return getStorage(
-        STORAGE_KEYS.currentUser,
-        null
-    );
-
-}
-
+/* 12. LOGIN SESSION */
 
 function checkLoginSession() {
-
     const currentUser = getCurrentUser();
 
     const currentPage = window.location.pathname
@@ -508,18 +345,12 @@ function checkLoginSession() {
         "register.html"
     ];
 
-    if (
-        protectedPages.includes(currentPage) &&
-        !currentUser
-    ) {
+    if (protectedPages.includes(currentPage) && !currentUser) {
         window.location.href = "./login.html";
         return false;
     }
 
-    if (
-        authPages.includes(currentPage) &&
-        currentUser
-    ) {
+    if (authPages.includes(currentPage) && currentUser) {
         window.location.href = "./dashboard.html";
         return false;
     }
@@ -528,176 +359,39 @@ function checkLoginSession() {
 }
 
 
-/* =========================================================
-   11. USER PROFILE
-========================================================= */
+/* 13. USER PROFILE */
 
 function displayUserProfile() {
+    const user = getCurrentUser();
 
-    const currentUser = getCurrentUser();
+    if (!user) return;
 
-    if (!currentUser) {
-        return;
-    }
-
-    const displayName =
-        currentUser.name ||
-        currentUser.fullName ||
-        currentUser.username ||
-        "Administrator";
+    const name = user.name || user.fullName || user.username || "Administrator";
 
     const adminName = document.getElementById("adminName");
-    const adminAvatar = document.getElementById("adminAvatar");
     const adminTopbarName = document.getElementById("adminTopbarName");
+    const avatar = document.getElementById("adminAvatar");
 
-    if (adminName) {
-        adminName.textContent = displayName;
+    if (adminName) adminName.textContent = name;
+    if (adminTopbarName) adminTopbarName.textContent = name;
+
+    if (avatar) {
+        avatar.textContent = name
+            .split(" ")
+            .filter(Boolean)
+            .map(word => word.charAt(0))
+            .join("")
+            .substring(0, 2)
+            .toUpperCase();
     }
-
-    if (adminTopbarName) {
-        adminTopbarName.textContent = displayName;
-    }
-
-    if (adminAvatar) {
-        adminAvatar.textContent =
-            displayName.charAt(0).toUpperCase();
-    }
-
 }
 
 
-/* =========================================================
-   12. MESSAGE HELPER
-========================================================= */
-
-function showMessage(element, message, type = "error") {
-
-    if (!element) {
-        if (type === "error") {
-            alert(message);
-        }
-        return;
-    }
-
-    element.textContent = message;
-    element.className = "form-feedback " + type;
-    element.style.display = "block";
-
-}
-
-
-/* =========================================================
-   13. GET ANIMALS AND APPLICATIONS
-========================================================= */
-
-function getAnimals() {
-    return getStorage(STORAGE_KEYS.animals, []);
-}
-
-
-function getApplications() {
-    return getStorage(STORAGE_KEYS.applications, []);
-}
-
-
-/* =========================================================
-   14. DASHBOARD STATISTICS
-========================================================= */
-
-function updateDashboardStats() {
-
-    const animals = getAnimals();
-    const applications = getApplications();
-
-    const totalAnimals = animals.length;
-
-    const availableAnimals = animals.filter(animal =>
-        normaliseText(animal.status) === "available"
-    ).length;
-
-    const adoptedAnimals = animals.filter(animal =>
-        normaliseText(animal.status) === "adopted"
-    ).length;
-
-    const pendingApplications = applications.filter(application =>
-        normaliseText(application.status) === "pending"
-    ).length;
-
-
-    const totalElement = document.getElementById("totalAnimals");
-    const availableElement = document.getElementById("availableAnimals");
-    const adoptedElement = document.getElementById("adoptedAnimals");
-    const pendingElement = document.getElementById("pendingApplications");
-
-
-    if (totalElement) {
-        totalElement.textContent = totalAnimals;
-    }
-
-    if (availableElement) {
-        availableElement.textContent = availableAnimals;
-    }
-
-    if (adoptedElement) {
-        adoptedElement.textContent = adoptedAnimals;
-    }
-
-    if (pendingElement) {
-        pendingElement.textContent = pendingApplications;
-    }
-
-}
-
-
-/* =========================================================
-   15. RECENT ANIMALS TABLE
-========================================================= */
-
-function displayRecentAnimals() {
-
-    const tableBody = document.getElementById("recentAnimalsTable");
-
-    if (!tableBody) {
-        return;
-    }
-
-    const animals = getAnimals();
-
-    const recentAnimals = [...animals].slice(-5).reverse();
-
-    if (recentAnimals.length === 0) {
-
-        tableBody.innerHTML = `
-            <tr>
-                <td colspan="5">No animal records found.</td>
-            </tr>
-        `;
-
-        return;
-    }
-
-    tableBody.innerHTML = recentAnimals.map(animal => `
-
-        <tr>
-            <td><strong>${escapeHTML(animal.name)}</strong></td>
-            <td>${escapeHTML(animal.species)}</td>
-            <td>${escapeHTML(animal.breed)}</td>
-            <td>${escapeHTML(animal.age)}</td>
-            <td>${getStatusBadge(animal.status)}</td>
-        </tr>
-
-    `).join("");
-
-}
-
-
-/* =========================================================
-   16. ANIMAL STATUS BADGE
-========================================================= */
+/* 14. STATUS BADGE */
 
 function getStatusBadge(status) {
-
     const safeStatus = String(status || "Available");
+
     const statusClass = normaliseText(safeStatus)
         .replace(/\s+/g, "-");
 
@@ -706,84 +400,134 @@ function getStatusBadge(status) {
             ${escapeHTML(safeStatus)}
         </span>
     `;
-
 }
 
 
-/* =========================================================
-   17. DISPLAY ANIMALS
-========================================================= */
+/* 15. DASHBOARD STATISTICS */
 
-function displayAnimals(list = null) {
+function updateDashboardStats() {
+    const animals = getAnimals();
+    const applications = getApplications();
 
-    const tableBody = document.getElementById("animalTableBody");
+    const values = {
+        totalAnimals: animals.length,
+        availableAnimals: animals.filter(a => normaliseText(a.status) === "available").length,
+        adoptedAnimals: animals.filter(a => normaliseText(a.status) === "adopted").length,
+        pendingApplications: applications.filter(a => normaliseText(a.status) === "pending").length
+    };
 
-    if (!tableBody) {
+    Object.entries(values).forEach(([id, value]) => {
+        const element = document.getElementById(id);
+        if (element) element.textContent = value;
+    });
+}
+
+
+/* 16. ANIMAL PAGE STATISTICS */
+
+function updateAnimalPageStats() {
+    const animals = getAnimals();
+
+    const values = {
+        animalTotalCount: animals.length,
+        animalAvailableCount: animals.filter(a => a.status === "Available").length,
+        animalAdoptedCount: animals.filter(a => a.status === "Adopted").length,
+        animalCareCount: animals.filter(a => a.status === "Under Care").length
+    };
+
+    Object.entries(values).forEach(([id, value]) => {
+        const element = document.getElementById(id);
+        if (element) element.textContent = value;
+    });
+
+    // Support the other HTML version's statistic IDs too.
+    const alternativeIds = {
+        totalAnimals: animals.length,
+        availableAnimals: animals.filter(a => a.status === "Available").length,
+        adoptedAnimals: animals.filter(a => a.status === "Adopted").length
+    };
+
+    Object.entries(alternativeIds).forEach(([id, value]) => {
+        const element = document.getElementById(id);
+        if (element) element.textContent = value;
+    });
+}
+
+
+/* 17. RECENT ANIMALS */
+
+function displayRecentAnimals() {
+    const table = document.getElementById("recentAnimalsTable");
+
+    if (!table) return;
+
+    const animals = [...getAnimals()].slice(-5).reverse();
+
+    if (!animals.length) {
+        table.innerHTML = `<tr><td colspan="5">No animal records found.</td></tr>`;
         return;
     }
+
+    table.innerHTML = animals.map(animal => `
+        <tr>
+            <td><strong>${escapeHTML(animal.name)}</strong></td>
+            <td>${escapeHTML(animal.species || animal.type)}</td>
+            <td>${escapeHTML(animal.breed)}</td>
+            <td>${escapeHTML(animal.age)}</td>
+            <td>${getStatusBadge(animal.status)}</td>
+        </tr>
+    `).join("");
+}
+
+
+/* 18. DISPLAY ANIMALS */
+
+function displayAnimals(list = null) {
+    const table =
+        document.getElementById("animalsTable") ||
+        document.getElementById("animalTableBody");
+
+    if (!table) return;
 
     const animals = list || getAnimals();
 
-    if (animals.length === 0) {
-
-        tableBody.innerHTML = `
-            <tr>
-                <td colspan="7">No animal records found.</td>
-            </tr>
-        `;
-
+    if (!animals.length) {
+        table.innerHTML = `<tr><td colspan="7">No animal records found.</td></tr>`;
         return;
     }
 
-    tableBody.innerHTML = animals.map(animal => `
-
+    table.innerHTML = animals.map(animal => `
         <tr>
-
-            <td>
-                <strong>${escapeHTML(animal.name)}</strong>
-            </td>
-
-            <td>${escapeHTML(animal.species)}</td>
-
+            <td><strong>${escapeHTML(animal.name)}</strong></td>
+            <td>${escapeHTML(animal.species || animal.type)}</td>
             <td>${escapeHTML(animal.breed)}</td>
-
             <td>${escapeHTML(animal.age)}</td>
-
             <td>${escapeHTML(animal.gender)}</td>
-
             <td>${getStatusBadge(animal.status)}</td>
-
             <td>
                 <button
                     type="button"
                     class="btn btn-sm btn-outline-danger"
-                    onclick="deleteAnimal('${escapeHTML(animal.id)}')"
-                    aria-label="Delete ${escapeHTML(animal.name)}">
-
-                    <i class="fa-solid fa-trash"></i>
-
+                    onclick="deleteAnimal('${escapeHTML(animal.id)}')">
+                    <i class="fas fa-trash"></i>
                 </button>
             </td>
-
         </tr>
-
     `).join("");
-
 }
 
 
-/* =========================================================
-   18. ADD ANIMAL
-========================================================= */
+/* 19. ADD ANIMAL */
 
 function addAnimal(event) {
-
-    if (event) {
-        event.preventDefault();
-    }
+    if (event) event.preventDefault();
 
     const name = document.getElementById("animalName")?.value.trim();
-    const species = document.getElementById("animalSpecies")?.value;
+
+    const species =
+        document.getElementById("animalSpecies")?.value ||
+        document.getElementById("animalType")?.value;
+
     const breed = document.getElementById("animalBreed")?.value.trim();
     const age = document.getElementById("animalAge")?.value.trim();
     const gender = document.getElementById("animalGender")?.value;
@@ -796,40 +540,31 @@ function addAnimal(event) {
 
     const animals = getAnimals();
 
-    const duplicate = animals.some(animal =>
-        normaliseText(animal.name) === normaliseText(name)
-    );
-
-    if (duplicate) {
+    if (animals.some(a => normaliseText(a.name) === normaliseText(name))) {
         alert("An animal with this name already exists.");
         return;
     }
 
-    const newAnimal = {
+    animals.push({
         id: createId("animal"),
         name,
         species,
+        type: species,
         breed,
         age,
         gender,
         status
-    };
+    });
 
-    animals.push(newAnimal);
+    if (!saveStorage(STORAGE_KEYS.animals, animals)) return;
 
-    if (!saveStorage(STORAGE_KEYS.animals, animals)) {
-        return;
-    }
-
-    const form = document.getElementById("addAnimalForm");
-
-    if (form) {
-        form.reset();
-    }
+    document.getElementById("addAnimalForm")?.reset();
+    document.getElementById("animalForm")?.reset();
 
     displayAnimals();
     displayRecentAnimals();
     updateDashboardStats();
+    updateAnimalPageStats();
     refreshDashboardCharts();
 
     if (typeof closeAnimalModal === "function") {
@@ -837,188 +572,142 @@ function addAnimal(event) {
     }
 
     alert("Animal added successfully!");
-
 }
 
 
-/* =========================================================
-   19. DELETE ANIMAL
-========================================================= */
+/* 20. DELETE ANIMAL */
 
 function deleteAnimal(id) {
+    if (!confirm("Are you sure you want to delete this animal?")) return;
 
-    if (!confirm("Are you sure you want to delete this animal?")) {
-        return;
-    }
-
-    let animals = getAnimals();
-
-    animals = animals.filter(animal =>
-        String(animal.id) !== String(id)
-    );
+    const animals = getAnimals().filter(a => String(a.id) !== String(id));
 
     saveStorage(STORAGE_KEYS.animals, animals);
 
     displayAnimals();
     displayRecentAnimals();
     updateDashboardStats();
+    updateAnimalPageStats();
     refreshDashboardCharts();
-
 }
 
 
-/* =========================================================
-   20. SEARCH AND FILTER ANIMALS
-========================================================= */
+/* 21. SEARCH AND FILTER */
 
 function filterAnimals() {
-
     const searchInput = document.getElementById("animalSearch");
     const filterInput = document.getElementById("animalFilter");
 
-    const searchTerm = normaliseText(searchInput?.value || "");
-    const selectedFilter = normaliseText(filterInput?.value || "");
+    const search = normaliseText(searchInput?.value || "");
+    const filter = normaliseText(filterInput?.value || "");
 
-    const animals = getAnimals();
-
-    const filteredAnimals = animals.filter(animal => {
+    const filtered = getAnimals().filter(animal => {
+        const species = animal.species || animal.type || "";
 
         const matchesSearch =
-            normaliseText(animal.name).includes(searchTerm) ||
-            normaliseText(animal.species).includes(searchTerm) ||
-            normaliseText(animal.breed).includes(searchTerm);
+            normaliseText(animal.name).includes(search) ||
+            normaliseText(species).includes(search) ||
+            normaliseText(animal.breed).includes(search);
 
         const matchesFilter =
-            !selectedFilter ||
-            selectedFilter === "all" ||
-            normaliseText(animal.species) === selectedFilter ||
-            normaliseText(animal.status) === selectedFilter;
+            !filter ||
+            filter === "all" ||
+            normaliseText(species) === filter ||
+            normaliseText(animal.status) === filter;
 
         return matchesSearch && matchesFilter;
-
     });
 
-    displayAnimals(filteredAnimals);
-
+    displayAnimals(filtered);
 }
 
 
-/* =========================================================
-   21. DISPLAY APPLICATIONS
-========================================================= */
+/* 22. APPLICATION STATISTICS */
+
+function updateApplicationStats() {
+    const applications = getApplications();
+
+    const values = {
+        totalApplicationCount: applications.length,
+        pendingApplicationCount: applications.filter(a => a.status === "Pending").length,
+        approvedApplicationCount: applications.filter(a => a.status === "Approved").length,
+        declinedApplicationCount: applications.filter(a => a.status === "Declined").length
+    };
+
+    Object.entries(values).forEach(([id, value]) => {
+        const element = document.getElementById(id);
+        if (element) element.textContent = value;
+    });
+}
+
+
+/* 23. DISPLAY APPLICATIONS */
 
 function displayApplications() {
+    const table =
+        document.getElementById("applicationsTable") ||
+        document.getElementById("applicationTableBody");
 
-    const tableBody = document.getElementById("applicationTableBody");
-
-    if (!tableBody) {
-        return;
-    }
+    if (!table) return;
 
     const applications = getApplications();
 
-    if (applications.length === 0) {
-
-        tableBody.innerHTML = `
-            <tr>
-                <td colspan="5">No applications found.</td>
-            </tr>
-        `;
-
+    if (!applications.length) {
+        table.innerHTML = `<tr><td colspan="5">No applications found.</td></tr>`;
         return;
     }
 
-    tableBody.innerHTML = applications.map(application => `
-
+    table.innerHTML = applications.map(application => `
         <tr>
-
-            <td>
-                <strong>${escapeHTML(application.applicant)}</strong>
-            </td>
-
+            <td><strong>${escapeHTML(application.applicant)}</strong></td>
             <td>${escapeHTML(application.animal)}</td>
-
             <td>${escapeHTML(application.date)}</td>
-
             <td>${getStatusBadge(application.status)}</td>
-
             <td>
-
                 <select
                     class="form-select form-select-sm application-status-select"
                     data-application-id="${escapeHTML(application.id)}">
-
-                    <option value="Pending"
-                        ${application.status === "Pending" ? "selected" : ""}>
-                        Pending
-                    </option>
-
-                    <option value="Approved"
-                        ${application.status === "Approved" ? "selected" : ""}>
-                        Approved
-                    </option>
-
-                    <option value="Declined"
-                        ${application.status === "Declined" ? "selected" : ""}>
-                        Declined
-                    </option>
-
+                    <option value="Pending" ${application.status === "Pending" ? "selected" : ""}>Pending</option>
+                    <option value="Approved" ${application.status === "Approved" ? "selected" : ""}>Approved</option>
+                    <option value="Declined" ${application.status === "Declined" ? "selected" : ""}>Declined</option>
                 </select>
-
             </td>
-
         </tr>
-
     `).join("");
-
 }
 
 
-/* =========================================================
-   22. UPDATE APPLICATION STATUS
-========================================================= */
+/* 24. UPDATE APPLICATION STATUS */
 
 function updateApplicationStatus(id, newStatus) {
-
-    const validStatuses = ["Pending", "Approved", "Declined"];
-
-    if (!validStatuses.includes(newStatus)) {
-        return;
-    }
+    if (!["Pending", "Approved", "Declined"].includes(newStatus)) return;
 
     const applications = getApplications();
 
-    const applicationIndex = applications.findIndex(application =>
-        String(application.id) === String(id)
-    );
+    const index = applications.findIndex(a => String(a.id) === String(id));
 
-    if (applicationIndex === -1) {
-        return;
-    }
+    if (index === -1) return;
 
-    applications[applicationIndex].status = newStatus;
+    applications[index].status = newStatus;
 
     saveStorage(STORAGE_KEYS.applications, applications);
 
-
-    // Update the corresponding animal's status.
     const animals = getAnimals();
+    const selectedAnimal = applications[index].animal;
 
-    const application = applications[applicationIndex];
-
-    const relatedAnimal = animals.find(animal =>
-        normaliseText(animal.name) ===
-        normaliseText(application.animal)
+    const relatedAnimal = animals.find(a =>
+        normaliseText(a.name) === normaliseText(selectedAnimal)
     );
 
     if (relatedAnimal) {
+        const anotherApproved = applications.some(a =>
+            normaliseText(a.animal) === normaliseText(selectedAnimal) &&
+            a.status === "Approved"
+        );
 
-        if (newStatus === "Approved") {
+        if (anotherApproved) {
             relatedAnimal.status = "Adopted";
-        } else if (
-            newStatus === "Pending" &&
-            normaliseText(relatedAnimal.status) === "adopted"
-        ) {
+        } else if (relatedAnimal.status === "Adopted") {
             relatedAnimal.status = "Available";
         }
 
@@ -1029,390 +718,246 @@ function updateApplicationStatus(id, newStatus) {
     displayAnimals();
     displayRecentAnimals();
     updateDashboardStats();
+    updateAnimalPageStats();
+    updateApplicationStats();
     refreshDashboardCharts();
-
 }
 
 
-/* =========================================================
-   23. ESCAPE HTML
-========================================================= */
+/* 25. APPLICATION SEARCH */
 
-function escapeHTML(value) {
+function filterApplications() {
+    const search = normaliseText(document.getElementById("applicationSearch")?.value || "");
+    const filter = normaliseText(document.getElementById("applicationFilter")?.value || "");
 
-    return String(value ?? "").replace(/[&<>"']/g, character => {
+    const filtered = getApplications().filter(application => {
+        const matchesSearch =
+            normaliseText(application.applicant).includes(search) ||
+            normaliseText(application.animal).includes(search) ||
+            normaliseText(application.email).includes(search);
 
-        const entities = {
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            '"': "&quot;",
-            "'": "&#39;"
-        };
+        const matchesStatus =
+            !filter || application.status.toLowerCase() === filter;
 
-        return entities[character];
-
+        return matchesSearch && matchesStatus;
     });
 
+    const table =
+        document.getElementById("applicationsTable") ||
+        document.getElementById("applicationTableBody");
+
+    if (!table) return;
+
+    table.innerHTML = filtered.map(application => `
+        <tr>
+            <td>${escapeHTML(application.applicant)}</td>
+            <td>${escapeHTML(application.animal)}</td>
+            <td>${escapeHTML(application.date)}</td>
+            <td>${getStatusBadge(application.status)}</td>
+            <td>
+                <select class="form-select form-select-sm application-status-select"
+                    data-application-id="${escapeHTML(application.id)}">
+                    <option value="Pending" ${application.status === "Pending" ? "selected" : ""}>Pending</option>
+                    <option value="Approved" ${application.status === "Approved" ? "selected" : ""}>Approved</option>
+                    <option value="Declined" ${application.status === "Declined" ? "selected" : ""}>Declined</option>
+                </select>
+            </td>
+        </tr>
+    `).join("");
 }
 
 
-/* =========================================================
-   24. APPROVED ADOPTIONS CHART
-========================================================= */
+/* 26. DASHBOARD CHARTS */
 
 let adoptionChart = null;
-
+let statusChart = null;
 
 function initialiseAdoptionChart() {
+    const element = document.getElementById("adoptionChart");
 
-    const chartElement = document.getElementById("adoptionChart");
-
-    if (!chartElement || typeof ApexCharts === "undefined") {
-        return;
-    }
+    if (!element || typeof ApexCharts === "undefined") return;
 
     const applications = getApplications();
+    const year = new Date().getFullYear();
 
-    const months = [
-        "Jan", "Feb", "Mar", "Apr",
-        "May", "Jun", "Jul", "Aug",
-        "Sep", "Oct", "Nov", "Dec"
-    ];
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-    const currentYear = new Date().getFullYear();
-
-    const monthlyData = months.map((month, index) => {
-
-        return applications.filter(application => {
-
-            if (application.status !== "Approved") {
-                return false;
-            }
+    const data = months.map((month, index) =>
+        applications.filter(application => {
+            if (application.status !== "Approved" || !application.date) return false;
 
             const date = new Date(application.date + "T00:00:00");
 
-            return (
-                date.getFullYear() === currentYear &&
-                date.getMonth() === index
-            );
+            return date.getFullYear() === year && date.getMonth() === index;
+        }).length
+    );
 
-        }).length;
+    if (adoptionChart) adoptionChart.destroy();
 
+    adoptionChart = new ApexCharts(element, {
+        series: [{ name: "Approved Applications", data }],
+        chart: { type: "area", height: 300, toolbar: { show: false }, fontFamily: "DM Sans, sans-serif" },
+        colors: ["#71836b"],
+        stroke: { curve: "smooth", width: 3 },
+        fill: { type: "gradient", gradient: { opacityFrom: 0.35, opacityTo: 0.05 } },
+        dataLabels: { enabled: false },
+        xaxis: { categories: months },
+        yaxis: { min: 0, forceNiceScale: true },
+        grid: { borderColor: "#eee9e1", strokeDashArray: 4 }
     });
 
-    if (adoptionChart) {
-        adoptionChart.destroy();
-    }
-
-    const options = {
-
-        series: [{
-            name: "Approved Applications",
-            data: monthlyData
-        }],
-
-        chart: {
-            type: "area",
-            height: 300,
-            toolbar: {
-                show: false
-            },
-            fontFamily: "DM Sans, sans-serif"
-        },
-
-        colors: ["#71836b"],
-
-        stroke: {
-            curve: "smooth",
-            width: 3
-        },
-
-        fill: {
-            type: "gradient",
-            gradient: {
-                opacityFrom: 0.35,
-                opacityTo: 0.05
-            }
-        },
-
-        dataLabels: {
-            enabled: false
-        },
-
-        xaxis: {
-            categories: months
-        },
-
-        yaxis: {
-            min: 0,
-            forceNiceScale: true
-        },
-
-        grid: {
-            borderColor: "#eee9e1",
-            strokeDashArray: 4
-        },
-
-        tooltip: {
-            y: {
-                formatter: value => value + " approved applications"
-            }
-        }
-
-    };
-
-    adoptionChart = new ApexCharts(chartElement, options);
-
     adoptionChart.render();
-
 }
-
-
-/* =========================================================
-   25. ANIMALS BY SPECIES CHART
-========================================================= */
-
-let statusChart = null;
 
 
 function initialiseStatusChart() {
+    const element = document.getElementById("statusChart");
 
-    const chartElement = document.getElementById("statusChart");
-
-    if (!chartElement || typeof ApexCharts === "undefined") {
-        return;
-    }
+    if (!element || typeof ApexCharts === "undefined") return;
 
     const animals = getAnimals();
 
-    const speciesNames = [...new Set(
-        animals.map(animal => animal.species || "Other")
-    )];
+    const species = [...new Set(animals.map(a => a.species || a.type || "Other"))];
 
-    const speciesCounts = speciesNames.map(species => {
+    const counts = species.map(type =>
+        animals.filter(a => normaliseText(a.species || a.type) === normaliseText(type)).length
+    );
 
-        return animals.filter(animal =>
-            normaliseText(animal.species) === normaliseText(species)
-        ).length;
+    if (statusChart) statusChart.destroy();
 
+    statusChart = new ApexCharts(element, {
+        series: counts,
+        labels: species,
+        chart: { type: "donut", height: 300, fontFamily: "DM Sans, sans-serif" },
+        colors: ["#71836b", "#d9b39e", "#b6a9c6", "#e7ca83", "#9db7bd"],
+        legend: { position: "bottom" },
+        dataLabels: { enabled: true },
+        plotOptions: { pie: { donut: { size: "65%" } } }
     });
-
-    if (statusChart) {
-        statusChart.destroy();
-    }
-
-    const options = {
-
-        series: speciesCounts,
-
-        labels: speciesNames,
-
-        chart: {
-            type: "donut",
-            height: 300,
-            fontFamily: "DM Sans, sans-serif"
-        },
-
-        colors: [
-            "#71836b",
-            "#d9b39e",
-            "#b6a9c6",
-            "#e7ca83",
-            "#9db7bd"
-        ],
-
-        legend: {
-            position: "bottom"
-        },
-
-        dataLabels: {
-            enabled: true
-        },
-
-        stroke: {
-            show: true,
-            colors: ["#ffffff"],
-            width: 3
-        },
-
-        plotOptions: {
-            pie: {
-                donut: {
-                    size: "65%"
-                }
-            }
-        }
-
-    };
-
-    statusChart = new ApexCharts(chartElement, options);
 
     statusChart.render();
-
 }
 
-
-/* =========================================================
-   26. REFRESH DASHBOARD CHARTS
-========================================================= */
 
 function refreshDashboardCharts() {
-
     initialiseAdoptionChart();
     initialiseStatusChart();
-
 }
 
 
-/* =========================================================
-   27. MOBILE SIDEBAR
-========================================================= */
+/* 27. MOBILE MENU */
 
 function initialiseMobileMenu() {
+    const button =
+        document.getElementById("mobileMenuBtn") ||
+        document.getElementById("menuToggle");
 
-    const menuButton = document.getElementById("mobileMenuBtn");
-    const sidebar = document.getElementById("sidebar");
+    const sidebar =
+        document.getElementById("sidebar") ||
+        document.querySelector(".ph-sidebar") ||
+        document.querySelector(".sidebar");
 
-    if (!menuButton || !sidebar) {
-        return;
-    }
+    if (!button || !sidebar) return;
 
-    menuButton.addEventListener("click", function () {
-
+    button.addEventListener("click", function () {
         sidebar.classList.toggle("active");
-
     });
-
 }
 
 
-/* =========================================================
-   28. EVENT LISTENERS
-========================================================= */
+/* 28. MAIN INITIALISATION */
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    // Add default records without deleting existing data.
     initialiseData();
 
-    // Check login session.
     const sessionAllowed = checkLoginSession();
 
-    if (!sessionAllowed) {
-        return;
-    }
+    if (!sessionAllowed) return;
 
-    // Display profile.
     displayUserProfile();
 
-
-    // Login form.
+    // Login and registration forms.
     const loginForm = document.getElementById("loginForm");
 
     if (loginForm) {
         loginForm.addEventListener("submit", handleLogin);
     }
 
-
-    // Registration form.
     const registrationForm =
-        document.getElementById("registrationForm");
+        document.getElementById("registrationForm") ||
+        document.getElementById("registerForm");
 
     if (registrationForm) {
-        registrationForm.addEventListener(
-            "submit",
-            handleRegistration
-        );
+        registrationForm.addEventListener("submit", handleRegistration);
     }
 
-
-    // Logout links and buttons.
-    document.addEventListener("click", function (event) {
-
-        const logoutButton = event.target.closest(
-            "#logoutLink, #logoutBtn, .logout-btn, [data-logout]"
-        );
-
-        if (logoutButton) {
-            handleLogout(event);
-        }
-
+    // Logout links: supports multiple HTML versions.
+    document.querySelectorAll(
+        "#logoutLink, #logoutBtn, .logout-btn, .logout-link, [data-logout]"
+    ).forEach(button => {
+        button.addEventListener("click", handleLogout);
     });
 
-
-    // Dashboard statistics.
+    // Dashboard.
     updateDashboardStats();
-
-    // Dashboard tables.
     displayRecentAnimals();
-
-    // Dashboard charts.
     refreshDashboardCharts();
 
-
-    // Animal management.
+    // Animals page.
     displayAnimals();
+    updateAnimalPageStats();
 
-    const animalForm = document.getElementById("addAnimalForm");
+    const animalForm =
+        document.getElementById("addAnimalForm") ||
+        document.getElementById("animalForm");
 
     if (animalForm) {
         animalForm.addEventListener("submit", addAnimal);
     }
 
+    const search = document.getElementById("animalSearch");
+    const filter = document.getElementById("animalFilter");
 
-    const animalSearch = document.getElementById("animalSearch");
+    if (search) search.addEventListener("input", filterAnimals);
+    if (filter) filter.addEventListener("change", filterAnimals);
 
-    if (animalSearch) {
-        animalSearch.addEventListener("input", filterAnimals);
-    }
-
-
-    const animalFilter = document.getElementById("animalFilter");
-
-    if (animalFilter) {
-        animalFilter.addEventListener("change", filterAnimals);
-    }
-
-
-    // Applications.
+    // Applications page.
     displayApplications();
+    updateApplicationStats();
 
-    const applicationTableBody =
+    const applicationSearch = document.getElementById("applicationSearch");
+    const applicationFilter = document.getElementById("applicationFilter");
+
+    if (applicationSearch) {
+        applicationSearch.addEventListener("input", filterApplications);
+    }
+
+    if (applicationFilter) {
+        applicationFilter.addEventListener("change", filterApplications);
+    }
+
+    const applicationTable =
+        document.getElementById("applicationsTable") ||
         document.getElementById("applicationTableBody");
 
-    if (applicationTableBody) {
+    if (applicationTable) {
+        applicationTable.addEventListener("change", function (event) {
+            const select = event.target.closest(".application-status-select");
 
-        applicationTableBody.addEventListener("change", function (event) {
-
-            const select = event.target.closest(
-                ".application-status-select"
-            );
-
-            if (!select) {
-                return;
+            if (select) {
+                updateApplicationStatus(
+                    select.dataset.applicationId,
+                    select.value
+                );
             }
-
-            updateApplicationStatus(
-                select.dataset.applicationId,
-                select.value
-            );
-
         });
-
     }
 
-
-    // Mobile sidebar.
+    // Sidebar and year.
     initialiseMobileMenu();
 
-
-    // Current year.
-    const yearElements = document.querySelectorAll(
-        "#currentYear, [data-year]"
-    );
-
-    yearElements.forEach(element => {
+    document.querySelectorAll("#currentYear, [data-year]").forEach(element => {
         element.textContent = new Date().getFullYear();
     });
 
